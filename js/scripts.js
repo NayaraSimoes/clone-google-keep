@@ -6,9 +6,14 @@ const noteInput = document.querySelector("#note-content");
 const addNoteBtn = document.querySelector(".-add-note");
 
 //Funções
+function showNotes() {
+  getNotes().forEach((note) => {
+    const noteElement = createNote(note.id, note.content, note.fixed);
+  });
+}
+
 function addNote() {
   const notes = [];
-
   const noteObject = {
     id: generateId(),
     content: noteInput.value,
@@ -20,6 +25,10 @@ function addNote() {
   notesContainer.appendChild(noteElement);
 
   notes.push(noteObject);
+
+  saveNotes(notes);
+
+  noteInput.value= "";
 }
 
 function generateId () {
@@ -43,5 +52,16 @@ function createNote(id, content, fixed) {
   return element;
 }
 
+//Local Storage
+function getNotes() {
+  const notes = JSON.parse(localStorage.getItem("notes") || "[]");
+  return notes;
+}
+
+
+function saveNotes(notes) {
+  localStorage.setItem("notes", JSON.stringify(notes));
+}
+
 //Eventos
-addNoteBtn -addEventListener("click", () => addNote());
+addNoteBtn.addEventListener("click", () => addNote());
